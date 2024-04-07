@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    box-sizing: border-box;
+}
+
+.dark{
+    color : #ffffff99;
+    background-color : #080a0b;
+}
+
+.light{
+    /* color : #858C94; */
+    color : #5f6061;
+    background-color: #ffffff;
+}
+
+.myBorder{
+    border-top: 0.7px solid #47556950;
+}
+.myAllBorder-dark{
+    border: 0.7px solid #7a7a7a;
+}
+.myAllBorder-light{
+    border: 0.7px solid #47556950;
+}
+
+/* 일정 블럭 색 */
+.red{
+    background-color: #dc2626;
+}
+.rose{
+    background-color: #fb7185;
+}
+.zinc{
+    background-color: #a1a1aa;
+}
+.blue{
+    background-color: #60a5fa;
+}
+.orange{
+    background-color: #f97316;
+}
+.yellow{
+    background-color: #facc15;
+}
+
+.overflow-y-auto{
+    overflow-y: auto;
+}
+.overflow-y-auto::-webkit-scrollbar {
+    display: none;
+}
+
+@media screen and (min-width: 800px) {
+    .Com-Header {
+      height:100vh;
+      width:15vw;
+    }
+    .Phone-Header{
+        display : none;
+    }
+    .Body{
+        height:100vh;
+        width:85vw;
+    }
+    .App{
+        display:flex;
+        flex-direction:row;
+    }
+  }
+  
+/* 핸드폰 */
+@media screen and (max-width: 800px) {
+    .Com-Header {
+        display : none;
+    }
+    .Phone-Header{
+        height:8vh;
+        width:100vw;
+    }
+    .Body{
+        height:92vh;
+        width:100vw;
+    }
+    .App{
+        display:flex;
+        flex-direction:column;
+    }
+}
+  

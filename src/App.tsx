@@ -1,38 +1,65 @@
-import React, { useEffect } from 'react';
-import './App.css';
+import React, { useCallback, useEffect, useState } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { DarkModeStore } from './zustandDarkMode';
+import { NowDateStore } from './zustandDate';
+import { holidayStore } from './zustandHoliday';
+import { HolidayApi } from './Hooks/HolydayApi';
+import { calendarStore } from './zustandCalendar';
+import DateCalculation from './Hooks/DateCalculation';
+import { userScheduleApi } from './Hooks/UserScheduleApi';
 
-function App() {
+import Body from './Pages/Body';
+import ComHeader from './Header/ComHeader';
+import PhoneHeader from './Header/PhoneHeader';
+import PopupPage from './Components/Popup/PopupPage';
+import { userScheduleStore } from './zustandUserSchedule';
+
+const App = () => {
+  const isDarkMode = DarkModeStore(state => state.isDarkMode);
+  const { year, month } = NowDateStore();
+  const { setHoliday } = holidayStore();
+  const { setCalendar } = calendarStore();
+  const { setUserSchedule } = userScheduleStore();
+
+  // 달력정보 store에 저장
   useEffect(()=>{
-      var year = 2024; // 연도
-      var month = 3; // 월 
+    const avData:any = []
+    setCalendar(avData);setHoliday(avData);setUserSchedule(avData);
 
-      // 해당 월의 첫째 날 생성
-      var firstDayOfMonth = new Date(year, month - 1, 1);
-
-      // 해당 월의 마지막 날 생성
-      var lastDayOfMonth = new Date(year, month, 0);
-
-      // 해당 월의 첫째 날부터 마지막 날까지의 날짜 배열 생성
-      var datesArray = [];
-      for (var i = firstDayOfMonth.getDate(); i <= lastDayOfMonth.getDate(); i++) {
-          var currentDate = new Date(year, month - 1, i);
-          var dayData = currentDate.toString().substring(8,10)
-          var monthData = currentDate.toString().substring(0,4)
-          var data = {day:dayData,month:monthData}
-          datesArray.push(data);
-      }
-
-      // 결과 확인
-      console.log(year+"년 "+month+"월")
-      console.table(datesArray);
-
-  },[])
+    // Calendar
+    const CF = async()=>{
+      const data = await DateCalculation(year,month);
+      setCalendar(data);
+    }
+    // Holiday
+    const HF = async()=>{
+      const data = await HolidayApi(year,month);
+      setHoliday(data);
+    }
+    // UserSchedule
+    const UF = async() => {
+      const data = await userScheduleApi(year,month);
+      setUserSchedule(data);
+    }
+    UF();
+    CF();
+    HF();
+  },[year,month])
 
   return (
-    <div className="App">
-      <header className="App-header">
-      </header>
-      
+    <div className={`App ${isDarkMode ? 'dark' : 'light'}`}>
+      <BrowserRouter>
+
+      {/* 컴퓨터 */}
+        <div className='Com-Header'><ComHeader/></div>
+      {/* 바디 */}
+        <div className='Body'><Body/></div>
+      {/* 핸드폰 */}
+        <div className='Phone-Header'><PhoneHeader/></div>
+      {/* 팝업 */}
+        <PopupPage/>
+
+      </BrowserRouter>
     </div>
   );
 }
