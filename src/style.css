@@ -2,21 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 패딩으로 디브 크기 늘어나는거 막기 */
 * {
     box-sizing: border-box;
 }
-
+/* 스크롤바 안보이게 하기 */
+*::-webkit-scrollbar {
+    display: none;
+  }
+/* 클릭 시 보더 제거 */
+input:focus {
+    outline: none;
+}
+/* 다크모드 */
 .dark{
     color : #ffffff99;
     background-color : #080a0b;
 }
-
+/* 라이트모드 */
 .light{
     /* color : #858C94; */
     color : #5f6061;
     background-color: #ffffff;
 }
-
+/* 볼더 커스텀 */
 .myBorder{
     border-top: 0.7px solid #47556950;
 }
@@ -26,33 +35,55 @@
 .myAllBorder-light{
     border: 0.7px solid #47556950;
 }
-
 /* 일정 블럭 색 */
-.red{
+.red{ /* red-600 */
     background-color: #dc2626;
 }
-.rose{
+.rose{/* rose-400 */
     background-color: #fb7185;
 }
-.zinc{
+.zinc{/* zinc-400 */
     background-color: #a1a1aa;
 }
-.blue{
+.blue{/* blue-400 */
     background-color: #60a5fa;
 }
-.orange{
+.orange{/* orange-500 */
     background-color: #f97316;
 }
-.yellow{
+.yellow{/* yellow-400 */
     background-color: #facc15;
 }
-
+.fuchsia{/* fuchsia-400 */
+    background-color: #e879f9;
+}
+.violet{/* violet-400 */
+    background-color: #a78bfa;
+}
+.teal{/* teal-300 */
+    background-color: #5eead4;
+}
+.green{/* green-500 */
+    background-color: #22c55e;
+}
+.purple{/* purple-600 */
+    background-color: #9333ea;
+}
+.lime{/* lime-500 */
+    background-color: #84cc16;
+}
+/* 디브에 스크롤 기능 생성 */
 .overflow-y-auto{
     overflow-y: auto;
 }
 .overflow-y-auto::-webkit-scrollbar {
     display: none;
 }
+/* 줄넘김 없애기 */
+.no-wrap {
+    white-space: nowrap;
+}
+  
 
 @media screen and (min-width: 800px) {
     .Com-Header {
@@ -90,4 +121,3 @@
         flex-direction:column;
     }
 }
-  

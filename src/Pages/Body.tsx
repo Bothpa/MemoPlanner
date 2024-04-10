@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { DarkModeStore } from '../zustandDarkMode';
+import { DarkModeStore } from '../zustandStore/zustandDarkMode';
 import CalendarPage from './CalendarPage';
 import MemoPage from './MemoPage';
 

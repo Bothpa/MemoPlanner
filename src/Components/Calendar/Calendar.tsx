@@ -1,8 +1,9 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
-import { isPopupStore } from '../../zustandIsPopup';
-import { holidayStore } from '../../zustandHoliday';
-import { calendarStore } from '../../zustandCalendar';
-import { userScheduleStore } from '../../zustandUserSchedule';
+import { isPopupStore } from '../../zustandStore/zustandIsPopup';
+import { holidayStore } from '../../zustandStore/zustandHoliday';
+import { calendarStore } from '../../zustandStore/zustandCalendar';
+import { userScheduleStore } from '../../zustandStore/zustandUserSchedule';
+import UserScheduleBlock from './UserScheduleBlock';
  
 interface CalHeaderProps {
     day:string;
@@ -20,13 +21,6 @@ interface CalHolidayBlockProps {
   color : string | null;
   userText : string | null;
 }
-interface CalBlockDivProps {
-  color : string | null;
-  userText : string | null;
-  year : number | null;
-  month : number | null;
-  day : number | null;
-} 
 interface holiday {
   year : number;
   month : number;
@@ -39,6 +33,14 @@ interface userSchedule{
   day : number;
   color : string;
   usertext : string;
+}
+interface userSchedule{
+  year:number;
+  month:number;
+  day:number;
+  id:number;
+  color:string;
+  usertext:string;
 }
 
 const CalHeaderDiv: React.FC<CalDivProps> = ({ children }) => {
@@ -54,16 +56,8 @@ const CalDataDiv: React.FC<CalDivProps> = ({ children }) => {
 };
 
 const CalHolidayBlock: React.FC<CalHolidayBlockProps> = ({color, userText}) => {
-  return <div className={`w-[100%] h-fit text-white text-[13px] rounded mb-px ${color}`}>{userText}</div>
+  return <div className={`w-[100%] h-fit text-white text-[13px] rounded mb-[3px] no-wrap max-[800px]:text-[11px] ${color}`}>{userText}</div>
 };
-
-const CalBlock: React.FC<CalBlockDivProps> = ({color, userText, year, month, day}) => {
-  return (
-  <div className={`w-[100%] h-fit text-white text-[13px] rounded mb-px ${color}`}>
-    {userText}
-  </div>
-  )
-}
 
 
 const CalDiv = () => {
@@ -73,29 +67,35 @@ const CalDiv = () => {
   const month = today.getMonth() + 1;
   const day = today.getDate();
 
-  const CalData:CalData[]|null = calendarStore().calendar;
+  const CalData:CalData[]|null = calendarStore(state => state.calendar);
   const CDL = CalData?CalData.length:0;
+  const holiday: holiday[] | null = holidayStore(state => state.holiday);
+  const userSchedule : userSchedule[] | null = userScheduleStore(state => state.userSchedule);
 
-  const holiday: holiday[] | null = holidayStore().holiday;
-
-  const userSchedule : userSchedule[] | null = userScheduleStore().userSchedule;
-
-  const PE = (year:number|null, month:number|null ,day:number|null) => {
-    if(day!=null){setPopupIn()}
-  }
+  const PE = (year: number | null, month: number | null, day: number | null) => {
+    if (day != null && year != null && month != null) {
+        const filteredData: userSchedule[] | null = userSchedule ? userSchedule.filter(item => item.day === day && item.month === month && item.year === year) : null;
+        if (filteredData !== null) {
+            setPopupIn(year, month, day, filteredData);
+        }
+    }
+}
 
   return (
     <>
     {CalData && CalData.map((item, index) => (
-        <div key={index}  onClick={()=>PE(item.year, item.month, item.day)} className={`flex items-center flex-col w-[14.28%] ${CDL <= 35 ?' h-[20%]':' h-[16.5%]'} text-center myBorder p-[1px] text-[100%] overflow-y-auto ${item.weekDay === 'Sun' ? 'text-red-600' : ''}`}>
-          <div className={`${item.year===year && item.month===month && item.day===day ? 'flex justify-center items-center bg-blue-400 w-5 h-5 rounded-xl text-white mt-[2px] mb-[2px]' : ''}`}>{item.day}</div>     
+        <div key={index}  onClick={()=>PE(item.year, item.month, item.day)} className={`flex items-center flex-col w-[14.28%] ${CDL <= 35 ?' h-[20%]':' h-[16.5%]'} text-center myBorder p-[1px] text-[100%] overflow-y-auto overflow-x-hidden ${item.weekDay === 'Sun' ? 'text-red-600' : ''}`}>
+
+          <div className={`${item.year===year && item.month===month && item.day===day ? 'flex justify-center items-center bg-blue-400 w-5 h-5 rounded-xl text-white mt-[2px] mb-[2px]' : ''}`}>
+            {item.day}
+          </div>     
 
           {holiday && holiday.map((holidayitem, holidayindex) => (
               (holidayitem.day === item.day ? <CalHolidayBlock color={"red"} userText={holidayitem.text} key={holidayindex}/> : null)
           ))}
 
           {userSchedule && userSchedule.map((userScheduleitem, userScheduleindex) => (
-            (userScheduleitem.day === item.day ? <CalBlock color={userScheduleitem.color} userText={userScheduleitem.usertext} key={userScheduleindex} year={item.day} month={item.month} day={item.day}/> : null)
+            (userScheduleitem.day === item.day ? <UserScheduleBlock color={userScheduleitem.color} userText={userScheduleitem.usertext} key={userScheduleindex}/> : null)
           ))}
 
         </div>

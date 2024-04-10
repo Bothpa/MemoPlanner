@@ -1,18 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState  } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { DarkModeStore } from './zustandDarkMode';
-import { NowDateStore } from './zustandDate';
-import { holidayStore } from './zustandHoliday';
+import { DarkModeStore } from './zustandStore/zustandDarkMode';
+import { NowDateStore } from './zustandStore/zustandDate';
+import { holidayStore } from './zustandStore/zustandHoliday';
 import { HolidayApi } from './Hooks/HolydayApi';
-import { calendarStore } from './zustandCalendar';
-import DateCalculation from './Hooks/DateCalculation';
+import { calendarStore } from './zustandStore/zustandCalendar';
+import DateCalculation from './Hooks/DateCalculationApi';
 import { userScheduleApi } from './Hooks/UserScheduleApi';
+import { userScheduleStore } from './zustandStore/zustandUserSchedule';
 
 import Body from './Pages/Body';
 import ComHeader from './Header/ComHeader';
 import PhoneHeader from './Header/PhoneHeader';
-import PopupPage from './Components/Popup/PopupPage';
-import { userScheduleStore } from './zustandUserSchedule';
+import { PopupPage, SchedulePopup } from './Components/index';
 
 const App = () => {
   const isDarkMode = DarkModeStore(state => state.isDarkMode);
@@ -46,6 +46,7 @@ const App = () => {
     HF();
   },[year,month])
 
+
   return (
     <div className={`App ${isDarkMode ? 'dark' : 'light'}`}>
       <BrowserRouter>
@@ -58,6 +59,7 @@ const App = () => {
         <div className='Phone-Header'><PhoneHeader/></div>
       {/* 팝업 */}
         <PopupPage/>
+        <SchedulePopup/>
 
       </BrowserRouter>
     </div>

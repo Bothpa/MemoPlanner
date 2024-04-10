@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { DarkModeStore } from '../zustandDarkMode';
+import { DarkModeStore } from '../zustandStore/zustandDarkMode';
 import { Calendar } from '../Components/index';
 import { CalendarHeader } from '../Components/index';
-import { NowDateStore } from '../zustandDate';
+import { NowDateStore } from '../zustandStore/zustandDate';
 
 
 const CalendarPage = () => {
