@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { DarkModeStore } from '../zustandStore/zustandDarkMode';
 import CalendarPage from './CalendarPage';
 import MemoPage from './MemoPage';
+import Account from './Account';
 
 
 
@@ -15,6 +15,7 @@ const Body = () => {
         {/* 게시판 */}
         <Route path='/' element={<CalendarPage/>}/>
         <Route path='/memo' element={<MemoPage/>}/>
+        <Route path='/account' element={<Account/>}/>
         {/* 없는 url 예외처리 */}
         <Route path={"*"} element={<CalendarPage/>} />
       </Routes>

@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { ReactNode } from 'react';
 import { isPopupStore } from '../../zustandStore/zustandIsPopup';
 import { holidayStore } from '../../zustandStore/zustandHoliday';
 import { calendarStore } from '../../zustandStore/zustandCalendar';
@@ -84,7 +84,7 @@ const CalDiv = () => {
   return (
     <>
     {CalData && CalData.map((item, index) => (
-        <div key={index}  onClick={()=>PE(item.year, item.month, item.day)} className={`flex items-center flex-col w-[14.28%] ${CDL <= 35 ?' h-[20%]':' h-[16.5%]'} text-center myBorder p-[1px] text-[100%] overflow-y-auto overflow-x-hidden ${item.weekDay === 'Sun' ? 'text-red-600' : ''}`}>
+        <div key={index}  onClick={()=>PE(item.year, item.month, item.day)} className={`flex items-center flex-col w-[14.28%] ${CDL <= 35 ?' h-[20%]':' h-[16.5%]'} text-center myBorder p-[1px] text-[100%] overflow-y-auto overflow-x-hidden ${item.weekDay === 'Sun' ? 'text-red-600' : ''} ${item.weekDay === 'Sat' ? 'text-blue-600' : ''}`}>
 
           <div className={`${item.year===year && item.month===month && item.day===day ? 'flex justify-center items-center bg-blue-400 w-5 h-5 rounded-xl text-white mt-[2px] mb-[2px]' : ''}`}>
             {item.day}

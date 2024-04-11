@@ -1,20 +1,16 @@
-import axios,{ AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+import accessTokenAxiosConfig from './AxiosHeader';
 
 const DeleteScheduleApi = async(id:number) => {
     try{
-        const response:AxiosResponse<{success: boolean}> 
-        = await axios.delete(`http://jungsonghun.iptime.org:7223/userSchedule/delete/${id}`);
+        const response:AxiosResponse<{success: boolean, message:string}> 
+        = await accessTokenAxiosConfig.delete(`http://jungsonghun.iptime.org:7223/userSchedule/delete/${id}`);
         if(response.data.success)
         {   
-            // setIsColorPalletChange(false);
-            // setPopupOut();
-            // setIsColorPalletChange(true);
-            // userScheduleApi(nowYear,nowMonth);
-            window.location.reload();
+            return true;
         }else
         {
-            alert("일정 입력 실패");
-            window.location.reload();
+            alert(response.data.message);
         }
     }catch(err){
         alert(err);

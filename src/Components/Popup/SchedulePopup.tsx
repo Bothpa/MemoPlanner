@@ -1,4 +1,4 @@
-import React, { useEffect, useState  } from 'react';
+import { useEffect, useState  } from 'react';
 import { schedulePopupStore } from "../../zustandStore/zustandSchedulePopup"
 import { DarkModeStore } from "../../zustandStore/zustandDarkMode";
 import { motion } from "framer-motion";
@@ -9,6 +9,8 @@ import UpdataeScheduleApi from '../../Hooks/UpdataScheduleApi';
 import ButtonSimple from '../Button/ButtonSimple';
 import SubmitSimple from '../Button/SubmitSimple';
 import DeleteScheduleApi from '../../Hooks/DeleteSchedule';
+import { changeStateStore } from '../../zustandStore/zustandChangeState';
+import { isPopupStore } from '../../zustandStore/zustandIsPopup';
 
 const SchedulePopupForm = () => {
     const { isSchedulePopup,year,month,day,id,color,usertext } = schedulePopupStore();
@@ -18,6 +20,8 @@ const SchedulePopupForm = () => {
     const { isColorPallet, setIsColorPalletChange} = isColorPalletStore();
     const [inputUsertext, setInputUsertext] = useState<string>();
     const [inputColor, setInputColor] = useState<string>();
+    const { setChange } = changeStateStore();
+    const { setPopupOut } = isPopupStore();
 
     useEffect(()=>{
         if(color)
@@ -30,6 +34,13 @@ const SchedulePopupForm = () => {
         else
             setInputUsertext("")
     },[color,usertext,isSchedulePopup])
+
+    const reroadEvent = () => {
+        setChange();
+        setIsColorPalletChange(true);
+        setPopupOut();
+        setSchedulePopupOut();
+    }
 
     const formEvent = async(e:any) => {
         e.preventDefault();
@@ -49,7 +60,8 @@ const SchedulePopupForm = () => {
                 return;
             }
             // 일정 새로 삽입
-            InsertScheduleApi(data);
+            InsertScheduleApi(data)
+            .then(reroadEvent)
         }else{
             if(year!=null && month!=null && day!=null && inputColor!=null && inputUsertext!=null && id!=null){
                 data = {
@@ -66,14 +78,16 @@ const SchedulePopupForm = () => {
                 return;
             }
             // 일정 수정
-            UpdataeScheduleApi(data);
+            UpdataeScheduleApi(data)
+            .then(reroadEvent)
         }
     }
 
     const deleteEvent = () => {
         if(id !=null)
         {
-            DeleteScheduleApi(id);
+            DeleteScheduleApi(id)
+            .then(reroadEvent)
         }
     }
     
@@ -83,9 +97,10 @@ const SchedulePopupForm = () => {
         onClick={(e:any) => {e.stopPropagation()}}>
 
             {/* x버튼 */}
-            <motion.div whileHover={{ scale: 1.3 }} className="w-7 h-7 absolute right-5 top-5 cursor-pointer" onClick={setSchedulePopupOut}>
+            <motion.div whileHover={{ scale: 1.3 }} className="w-7 h-7 absolute right-5 top-5 cursor-pointer" onClick={()=>{setSchedulePopupOut();setIsColorPalletChange(true);}}>
                 <img src="/Icon/Xgray.png" alt="cancle" className="w-full h-full" />
             </motion.div>
+
             {/* 폼 */}
             <form onSubmit={formEvent} className="flex flex-col">
                 {/* 유저일정 입력 */}
@@ -101,7 +116,7 @@ const SchedulePopupForm = () => {
                         <div key={index} className='w-full h-full flex items-center justify-center'><motion.div whileHover={{ scale: 1.2 }} onClick={()=>{setInputColor(item);setIsColorPalletChange(isColorPallet)}} key={index} className={`w-11 h-11 rounded-lg ${item} cursor-pointer`}/></div>
                     ))}
                 </motion.div>
-                <div className='flex flex-row absolute bottom-3 right-3'>
+                <div className='flex flex-row w-full justify-center'>
                     <div className={`${id?'block':'hidden'} mr-2`}><ButtonSimple onClick={deleteEvent} label='삭제' /></div>
                     <SubmitSimple label={`${id?'수정':'등록'}`}/>
                 </div>    

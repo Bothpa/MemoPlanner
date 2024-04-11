@@ -1,7 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
 import { DarkModeStore } from '../zustandStore/zustandDarkMode';
-
-import { HolidayApi } from '../Hooks/HolydayApi';
 
 const MemoPage = () => {
   const isDarkMode = DarkModeStore(state => state.isDarkMode);

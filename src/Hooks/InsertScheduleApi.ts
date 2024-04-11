@@ -1,4 +1,5 @@
-import axios,{ AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+import accessTokenAxiosConfig from './AxiosHeader';
 
 interface data {
     year:number,
@@ -10,19 +11,15 @@ interface data {
 
 const InsertScheduleApi = async(data:data) => {
     try{
-        const response:AxiosResponse<{success: boolean}> 
-        = await axios.post(`http://jungsonghun.iptime.org:7223/userSchedule/insert`,data);
+        const response:AxiosResponse<{success: boolean, message:string}> 
+        = await accessTokenAxiosConfig.post(`http://jungsonghun.iptime.org:7223/userSchedule/insert`,data);
         if(response.data.success)
         {   
-            // setIsColorPalletChange(false);
-            // setPopupOut();
-            // setIsColorPalletChange(true);
-            // userScheduleApi(nowYear,nowMonth);
-            window.location.reload();
+            return true;
+            // window.location.reload();
         }else
         {
-            alert("일정 입력 실패");
-            window.location.reload();
+            alert(response.data.message);
         }
     }catch(err){
         alert(err);

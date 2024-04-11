@@ -1,9 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { DarkModeStore } from '../../zustandStore/zustandDarkMode';
-import { HolidayApi } from '../../Hooks/HolydayApi';
 import { isPopupStore } from '../../zustandStore/zustandIsPopup';
 import { getDayOfWeek } from '../../Hooks/DayOfWeek';
-import UserScheduleBlock from '../Calendar/UserScheduleBlock';
 import { schedulePopupStore } from '../../zustandStore/zustandSchedulePopup';
 import { motion } from 'framer-motion';
 

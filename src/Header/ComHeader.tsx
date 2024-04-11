@@ -1,30 +1,39 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DarkModeStore } from '../zustandStore/zustandDarkMode';
-import { motion } from "framer-motion";
+import ChangeThema from '../Components/Button/ChangeThema';
+import HeaderLink from '../Components/Button/HeaderLink';
+import { accountStore } from '../zustandStore/zustandAccount';
 
-const spring = {
-  type: "spring",
-  stiffness: 700,
-  damping: 30
+const Logo = () => {
+  const navigate = useNavigate();
+  const { isLogin, id, name } = accountStore();
+  return (<div onClick={()=>navigate('/')} className='w-full h-fit text-[27px] flex justify-center cursor-pointer'>
+            {/* {isLogin? `${id}님 환영합니다`:'로그인하셈.'} */}
+            MemoPlanner
+          </div>
+  );
 };
 
 const ComHeader = () => {
-  const { isDarkMode, setDarkMode, setLightMode } = DarkModeStore();
+  const { isDarkMode } = DarkModeStore();
+  const { isLogin } = accountStore();
 
   return (
-    <div className={`${isDarkMode ? 'dark border-r-[1px] border-gray-700' : 'light border-r-2'} w-full h-full`}>
-
-
-        라이트모드<div 
-          className={`
-          w-[45px] h-[25px] bg-slate-500 flex rounded-[50px] p-[2.5px] cursor-pointer 
-          ${isDarkMode ? 'justify-end' : 'justify-start'} `} 
-          onClick={()=>{if(isDarkMode){setLightMode()}else{setDarkMode()}}}
-          >
-          <motion.div className="w-[20px] h-[20px] bg-white rounded-[40px]" layout transition={spring} />
-        </div>다크모드
-
-
+    <div className={`${isDarkMode ? 'dark border-r-[1px] border-zinc-800' : 'light border-r-2'} w-full h-full relative`}>
+      {/* 로고박스 */}
+      <div className={`w-full p-2 ${isDarkMode ? 'dark border-b-[1px] border-zinc-800' : 'light border-b-2'}`}>
+        <Logo/>
+      </div>
+      {/* 링크박스 */}
+      <div className='w-full p-3 flex flex-col justify-center items-center'>
+          <HeaderLink label='Calendar' url='/' img='Calendar'/>
+          <HeaderLink label='Memo' url='/memo' img='Memo'/>
+          <HeaderLink label={`${isLogin?'Account':'Sign In'}`} url='/account' img='Account'/>
+      </div>  
+      {/* 설정박스 */}
+      <div className={`w-full flex justify-center absolute bottom-0 left-0 p-2 ${isDarkMode ? 'dark border-t-[1px] border-zinc-800' : 'light border-t-2'}`}>
+        <ChangeThema/>
+      </div>
     </div>
   );
 }

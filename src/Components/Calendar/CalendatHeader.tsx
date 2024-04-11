@@ -1,7 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
 import { NowDateStore } from '../../zustandStore/zustandDate';
 import { DarkModeStore } from '../../zustandStore/zustandDarkMode';
-import { isPopupStore } from '../../zustandStore/zustandIsPopup';
 import ButtonSimple from '../Button/ButtonSimple';
 
 
@@ -12,11 +10,12 @@ const CalendarHeader = () => {
   const nextYearMonth:()=>void = NowDateStore(state => state.setNextMonth);
   const preYearMonth:()=>void = NowDateStore(state => state.setPreMonth);
   const nowDate:()=>void = NowDateStore(state => state.setNowDate);
+  const { isDarkMode } = DarkModeStore();
   
     return (
       <div className="w-full h-full p-3 relative">
 
-        <div className='text-3xl mb-1 font-semibold'>{year}.{month}</div>
+        <div className={`text-3xl mb-1 font-semibold ${isDarkMode?'':'text-black'}`}>{year}.{month}</div>
 
         <div className='absolute bottom-2'>
           <ButtonSimple onClick={preYearMonth} label='이전달'/>

@@ -1,4 +1,5 @@
-import axios,{ AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+import accessTokenAxiosConfig from './AxiosHeader';
 
 interface userSchedule {
     year : number;
@@ -12,8 +13,8 @@ interface userSchedule {
 
 export const userScheduleApi = async(year:number, month:number) => {
     try{
-        const response:AxiosResponse<{success: boolean, data:userSchedule[]}> 
-        = await axios.get(`http://jungsonghun.iptime.org:7223/userSchedule/${year}/${month}`);
+        const response:AxiosResponse<{success: boolean, data:userSchedule[], message:string}> 
+        = await accessTokenAxiosConfig.get(`http://jungsonghun.iptime.org:7223/userSchedule/${year}/${month}`);
         if(response.data.success)
         {   
             return response.data.data;
