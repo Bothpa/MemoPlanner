@@ -35,7 +35,7 @@ const App = () => {
         if(stringAccount != null && accessToken != null){
           try{
             const account = JSON.parse(stringAccount);
-            setAccountLogin(account.id, account.name);
+            setAccountLogin(account.id, account.name, account.profileImg);
           }catch(err){
             sessionStorage.clear();
           }

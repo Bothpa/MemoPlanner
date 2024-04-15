@@ -11,7 +11,9 @@ const LogOutButton = () => {
         navigate('/')
         window.location.reload();
     }
-    return <button onClick={LogOutEvent} className="w-fit h-fit">로그아웃</button>;
+    return  <button onClick={LogOutEvent} className="w-fit h-fit p-[7px] flex flex-row items-center justify-center text-lg font-bold text-white bg-zinc-900 rounded-xl shadow-md">
+                로그아웃
+            </button>;
 }
 
 export default LogOutButton;

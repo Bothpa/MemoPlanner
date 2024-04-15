@@ -1,4 +1,3 @@
-import { DarkModeStore } from '../zustandStore/zustandDarkMode';
 import { accountStore } from '../zustandStore/zustandAccount';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -6,12 +5,8 @@ import axios from 'axios';
 import { userScheduleApi } from '../Hooks/UserScheduleApi';
 import { NowDateStore } from '../zustandStore/zustandDate';
 import { userScheduleStore } from '../zustandStore/zustandUserSchedule';
-import LoggedInView from '../Components/Account/LoggedInView';
-import LoggedOutView from '../Components/Account/LoggedOutView';
 
 const Account = () => {
-  const isDarkMode = DarkModeStore(state => state.isDarkMode);
-  const { isLogin, id, name } = accountStore();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const code = params.get('code');
@@ -27,8 +22,8 @@ const Account = () => {
         .then(async(res)=>{
             navigate('/');
             sessionStorage.setItem("accessToken",res.data.accessToken);
-            sessionStorage.setItem("account",`{"id":"${res.data.id}", "name":"${res.data.name}"}`)
-            setAccountLogin(res.data.id, res.data.name);
+            sessionStorage.setItem("account",`{"id":"${res.data.id}", "name":"${res.data.name}", profileImg:"${res.data.profileImg}"`)
+            setAccountLogin(res.data.id, res.data.name, res.data.profileImg);
             const data = await userScheduleApi(year,month);
             setUserSchedule(data);
         })
@@ -40,9 +35,8 @@ const Account = () => {
   },[])
 
   return (
-    <div className={`w-full h-full flex justify-center ${isDarkMode ? 'dark' : 'light'}`}>
-      {isLogin ? <LoggedInView /> : <LoggedOutView />}
-    </div>
+    <>
+    </>
   );
 }
 

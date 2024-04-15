@@ -4,7 +4,8 @@ interface accountStore{
     isLogin : boolean;
     id : string;
     name : string;
-    setAccountLogin : (id:string, name:string) => void;
+    profileImg : string;
+    setAccountLogin : (id:string, name:string, profileImg : string) => void;
     setAccountLogout : () => void;
 }
 
@@ -12,11 +13,12 @@ const accountStore = create<accountStore>( set => ({
     isLogin : false,
     id:"null",
     name:"null",
-    setAccountLogin: (id:string,name:string) => {
-        set({ isLogin:true, id : id, name : name});
+    profileImg : "null",
+    setAccountLogin: (id:string,name:string,profileImg : string) => {
+        set({ isLogin:true, id : id, name : name , profileImg : profileImg });
     },
     setAccountLogout: () => {
-        set({ isLogin:false ,id : "null", name : "null"});
+        set({ isLogin:false ,id : "null", name : "null", profileImg : "null"});
     }
 }));
 

@@ -28,7 +28,7 @@ const ComHeader = () => {
       <div className='w-full p-3 flex flex-col justify-center items-center'>
           <HeaderLink label='Calendar' url='/' img='Calendar'/>
           <HeaderLink label='Memo' url='/memo' img='Memo'/>
-          <HeaderLink label={`${isLogin?'Account':'LogIn'}`} url='/account' img='Account'/>
+          {/* <HeaderLink label={`${isLogin?'Account':'LogIn'}`} url='/account' img='Account'/> */}
       </div>  
       {/* 설정박스 */}
       <div className={`w-full flex justify-center absolute bottom-0 left-0 p-2 ${isDarkMode ? 'dark border-t-[1px] border-zinc-800' : 'light border-t-2'}`}>
