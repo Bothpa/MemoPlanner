@@ -8,26 +8,26 @@
 ## 기술
 
 * front-end
-    react.js + typescript  
+    * react.js + typescript  
 * back-end
-    express.js + javascript  
+    * express.js + javascript  
 * database
-    mysql  
+    * mysql  
 
 ## 외부 라이브러리 & API
 
 * Framer-motion
-    부드러운 css 애니메이션을 위해 사용한 라이브러리  
+    * 부드러운 css 애니메이션을 위해 사용한 라이브러리  
 * GitHub oauth
-    깃허브 소셜 로그인 API  
+    * 깃허브 소셜 로그인 API  
 * 공공데이터포털 한문천문연구원_특일 정보
-    공휴일 데이터 API  
+    * 공휴일 데이터 API  
 * Tailwind
-    css 라이브러리  
+    * css 라이브러리  
 * Zustand
-    리액트 상태관리 라이브러리  
+    * 리액트 상태관리 라이브러리  
 * Axios
-    AJAX요청 라이브러리  
+    * AJAX요청 라이브러리  
 
 ## 설치 방법
 
