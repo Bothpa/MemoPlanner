@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState  } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { DarkModeStore } from './zustandStore/zustandDarkMode';
 import { NowDateStore } from './zustandStore/zustandDate';
@@ -8,11 +8,12 @@ import { calendarStore } from './zustandStore/zustandCalendar';
 import DateCalculation from './Hooks/DateCalculationApi';
 import { userScheduleApi } from './Hooks/UserScheduleApi';
 import { userScheduleStore } from './zustandStore/zustandUserSchedule';
-
+import GithubAutoLoginEvent from './Hooks/GitHubAutoLogin';
 import Body from './Pages/Body';
 import ComHeader from './Header/ComHeader';
 import PhoneHeader from './Header/PhoneHeader';
-import { PopupPage, SchedulePopup } from './Components/index';
+import PopupPage from './Components/Popup/PopupPage';
+import SchedulePopup from './Components/Popup/SchedulePopup';
 import { accountStore } from './zustandStore/zustandAccount';
 import { changeStateStore } from './zustandStore/zustandChangeState';
 import LoginStatus from './Components/Account/LoginStatus';
@@ -44,6 +45,27 @@ const App = () => {
         }
       }
   },[])
+
+
+  // 자동로그인
+  // useEffect(()=>{
+  //   const GithubAutoLoginEventRes = async() => {
+  //     const res = await GithubAutoLoginEvent()
+  //     if(res != false && res.id != null && res.name != null)
+  //       {
+  //         setAccountLogin(res.id, res.name);
+  //         const data = await userScheduleApi(year,month);
+  //         setUserSchedule(data);
+  //       }
+  //   }
+  //   const refreshToken = localStorage.getItem('refreshToken')
+  //   const accessToken = sessionStorage.getItem('accessToken')
+  //   console.log(refreshToken+"\n"+accessToken)
+  //   if(refreshToken != null && accessToken == null)
+  //     {
+  //       GithubAutoLoginEventRes();
+  //     }
+  // },[])
 
   // 달력정보 store에 저장
   useEffect(()=>{
@@ -78,7 +100,7 @@ const App = () => {
   return (
     <div className={`App ${isDarkMode ? 'dark' : 'light'}`}>
       <BrowserRouter>
-
+      
       {/* 컴퓨터 */}
         <div className='Com-Header'><ComHeader/></div>
       {/* 바디 */}

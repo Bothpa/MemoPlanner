@@ -13,15 +13,14 @@ import { changeStateStore } from '../../zustandStore/zustandChangeState';
 import { isPopupStore } from '../../zustandStore/zustandIsPopup';
 
 const SchedulePopupForm = () => {
-    const { isSchedulePopup,year,month,day,id,color,usertext } = schedulePopupStore();
+    const { isSchedulePopup,year,month,day,id,color,usertext,setSchedulePopupOut } = schedulePopupStore();
     const { isDarkMode } = DarkModeStore();
-    const { setSchedulePopupOut } = schedulePopupStore();
-    const ColorData:Array<string> = ColorPallet();
     const { isColorPallet, setIsColorPalletChange} = isColorPalletStore();
-    const [inputUsertext, setInputUsertext] = useState<string>();
-    const [inputColor, setInputColor] = useState<string>();
     const { setChange } = changeStateStore();
     const { setPopupOut } = isPopupStore();
+    const [inputUsertext, setInputUsertext] = useState<string>();
+    const [inputColor, setInputColor] = useState<string>();
+    const ColorData:Array<string> = ColorPallet();
 
     useEffect(()=>{
         if(color)

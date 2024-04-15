@@ -6,6 +6,7 @@ const LogOutButton = () => {
     const { setAccountLogout } = accountStore();
     const LogOutEvent = () => {
         sessionStorage.clear();
+        // localStorage.clear();
         setAccountLogout();
         navigate('/')
         window.location.reload();

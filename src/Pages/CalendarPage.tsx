@@ -1,13 +1,9 @@
 import { DarkModeStore } from '../zustandStore/zustandDarkMode';
-import { Calendar } from '../Components/index';
-import { CalendarHeader } from '../Components/index';
-import { NowDateStore } from '../zustandStore/zustandDate';
-
+import Calendar from '../Components/Calendar/Calendar';
+import CalendarHeader from '../Components/Calendar/CalendatHeader';
 
 const CalendarPage = () => {
   const isDarkMode = DarkModeStore(state => state.isDarkMode);
-  const year = NowDateStore(state => state.year);
-  const month = NowDateStore(state => state.month);
 
   return (
     <div className={`w-full h-full ${isDarkMode ? 'dark' : 'light'}`}>
