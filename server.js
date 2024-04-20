@@ -14,8 +14,8 @@ const sql = require('./Hooks/mysql.js'); // sql 모듈을 가져옴
 const GitHubApi = require('./Hooks/GitHubApi.js');
 //----------------------------------------------------------------------모든 요청에대해 정지된아이피 감지
 app.use(cors({
-  origin: 'http://jungsonghun.iptime.org:3000',  // 클라이언트의 URL
-  credentials: true  // 쿠키를 허용하도록 설정
+  // origin: 'http://jungsonghun.iptime.org:3000',  // 클라이언트의 URL
+  // credentials: true  // 쿠키를 허용하도록 설정
 }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '../memoplanner/build')));
@@ -162,10 +162,10 @@ app.post("/account/github/login",async(req, res, next) => {
         const data2 = await axios.get(`https://api.github.com/user`, {
           headers: { Authorization: `token ${access_token}` },
         });
-        // console.table(data2.data);
+        console.table(data2.data);
         console.log("로그인 성공 id : "+data2.data.login);
         res.status(200).cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, sameSite: 'lax',maxAge:100000 })
-        .json({ accessToken : access_token, id : data2.data.login, name : data2.data.name });
+        .json({ accessToken : access_token, id : data2.data.login, name : data2.data.name, profileImg : data2.data.avatar_url });
         return;
       }catch(err){
         console.log("엑세스토큰 인증요청 에러")
@@ -227,9 +227,11 @@ app.post("/account/github/login",async(req, res, next) => {
 //   console.log("깃허브 자동 로그인 실패")
 //   res.status(500).json({success:false});
 // });
-
-
-
+//----------------------------------------------------------------------ckeditor 이미지 업로드
+app.post('/memo/imgupload',async(req, res, next) => {
+  console.log("이미지 업로드 요청");
+  res.status(200).json({success:true, url:"https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzExMDJfMTMx%2FMDAxNjk4ODU2NDM0NTgy.SUBeLIeGKK3Ha5fhnglZZKk7RjdfXOw-3rCBf9L_tR8g.4HdjfwuqCA2fhLoefrlWiRiYR95rCKLCs2iCaAnRM6Ug.JPEG.yg1129sg%2FIMG_0220.jpg&type=a340"});
+});
 
 app.use((req, res, next) => {
   console.log(req.ip);
