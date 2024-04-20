@@ -6,10 +6,10 @@ const LoginStatus = () => {
     const [isAccountPopup, setIsAccountPopup] = useState<boolean>(false);
     const { isLogin, id, name, profileImg } = accountStore();
     return(
-        <div className='fixed top-1 right-4 w-fit h-fit text-lg'>
+        <div className='fixed top-1 right-4 w-fit h-fit text-lg max-[800px]:text-base'>
             {isLogin?(
                 <div onClick={()=>setIsAccountPopup(!isAccountPopup)} className='font-bold cursor-pointer flex flex-row justify-center items-center'>
-                    <img src={profileImg} className='w-[30px] h-[30px] mr-2 rounded-2xl' alt="profileImg" />
+                    <img src={profileImg} className='w-[30px] h-[30px] max-[800px]:w-[23px] max-[800px]:h-[23px] mr-2 rounded-2xl' alt="profileImg" />
                     {id}({name})
                 </div>
             ):(

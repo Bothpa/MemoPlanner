@@ -1,10 +1,8 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { DarkModeStore } from '../zustandStore/zustandDarkMode';
 import CalendarPage from './CalendarPage';
 import MemoPage from './MemoPage';
 import Account from './Account';
-
-
 
 const Body = () => {
   const isDarkMode = DarkModeStore(state => state.isDarkMode);
@@ -22,5 +20,4 @@ const Body = () => {
     </div>
   );
 }
-
 export default Body;

@@ -122,3 +122,166 @@ input:focus {
         flex-direction:column;
     }
 }
+
+/* 마크다운을위한 html테그 기본 스타일 되살리기 */
+h1 {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 1.17em;
+    font-weight: bold;
+}
+
+h4 {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+h5 {
+    font-size: 0.83em;
+    font-weight: bold;
+}
+
+u {
+    text-decoration: underline;
+}
+
+s {
+    text-decoration: line-through;
+}
+
+ul {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+ul li {
+    list-style-type: disc;
+}
+
+ol {
+    list-style-type: decimal;
+    margin-left: 20px;
+} 
+
+strong {
+    font-weight: bold;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+i, em {
+    font-style: italic;
+}
+
+/* 블랙 버전 */
+/* blockquote {
+    border-left: 4px solid #ddd;
+    padding: 0 15px;
+    background-color : #1e1e1e;
+    color: #666;
+    quotes: "\201C""\201D""\2018""\2019";
+} */
+
+/* 라이트모드 버전 */
+blockquote {
+    margin-left:5px;
+    border-left: 10px solid skyblue;
+    padding: 5px 5px 5px 15px;
+    background-color : #F8F9FA;
+    color : black;
+    quotes: "\201C""\201D""\2018""\2019";
+    border-radius: 5px;
+}
+
+code {
+    padding: 0 2px;
+    background-color : inherit !important;
+    color : inherit !important;
+}
+
+
+/* ----------CkEditor css---------- */
+/* -----전체적용----- */
+.ck{
+    border : 0 !important;
+}
+
+/* -----최종 부모 컨테이너----- */
+.ck-editor{
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* -----에디터 글쓰는 곳----- */
+/* input div 부모 div */
+.ck-editor__main{
+    height: 96% !important;
+    margin-top: 5px !important;
+}
+/* input div */
+.ck-editor__editable{
+    height: 100% !important;
+    background-color : inherit !important;
+}
+
+/* -----에디터 툴바----- */
+/* 툴바 부모 div */
+.ck-editor__top{
+    height: 3% !important;
+}
+/* 툴바 div */
+.ck-toolbar_grouping{
+    height: 100% !important;
+    background-color : inherit !important;
+} 
+/* 에디터 툴바 툴 구분선 */
+.ck-toolbar__separator{
+    background-color : rgb(96,165,250) !important;
+}
+/* 툴바 아이콘 색 변경 */
+.ck-icon_inherit-color :not([fill]){
+    /* fill: white !important; */
+    fill: rgb(96,165,250) !important;
+}
+/* 툴바 버튼 텍스트 */
+.ck-button__label{
+    color : rgb(96,165,250) !important;
+}
+/* 툴바 드롭다운 패널 */
+.ck-dropdown__panel{
+    background-color : rgb(224,242,254) !important;
+    border : 0.1px solid rgb(96,165,250,20)  !important;
+}
+/* 툴바 드롭다운 안에 li */
+.ck-list{
+    background-color : inherit !important;
+}
+
+/* .language-plaintext{
+    color : inherit
+} */
+
+/* -----에디터 누를시 밑에 광고바 뜨는거 제거----- */
+.ck-body-wrapper{
+    display : none !important;
+}
+
+/* 핸드폰 */
+@media screen and (max-width: 800px) {
+    .ck-editor{
+        width: 100% !important;
+        height: 93% !important;
+        margin-top: 7% !important;
+    }
+}
