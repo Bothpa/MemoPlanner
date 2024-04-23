@@ -12,13 +12,14 @@ const cookieParser = require('cookie-parser'); //쿠키파서
 //----------------------------------------------------------------------나의 코드 모듈
 const sql = require('./Hooks/mysql.js'); // sql 모듈을 가져옴
 const GitHubApi = require('./Hooks/GitHubApi.js');
+const multer = require('multer');
 //----------------------------------------------------------------------모든 요청에대해 정지된아이피 감지
 app.use(cors({
   // origin: 'http://jungsonghun.iptime.org:3000',  // 클라이언트의 URL
   // credentials: true  // 쿠키를 허용하도록 설정
 }));
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, '../memoplanner/build')));
+// app.use(express.static(path.join(__dirname, '../memoplanner/build')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser('bothpa'));
@@ -41,7 +42,6 @@ app.listen(port, function () {
 // }));
 //----------------------------------------------------------------------스캐줄 넘기기
 app.get('/userSchedule/:year/:month',async(req, res, next) => {
-  console.log(req.ip)
   const { year, month } = req.params;
   const accessToken = req.headers.authorization;
   const userid = await GitHubApi.GitHubApi(accessToken)
@@ -227,13 +227,158 @@ app.post("/account/github/login",async(req, res, next) => {
 //   console.log("깃허브 자동 로그인 실패")
 //   res.status(500).json({success:false});
 // });
+//----------------------------------------------------------------------메모 만들기
+app.post('/memo/insertmemo',async(req, res, next) => {
+  console.log("요청옴")
+  const accessToken = req.headers.authorization;
+  if(!accessToken)
+  {
+    res.status(200).json({success:false,message:"로그인 후 이용해주세요."});
+    return;
+  }
+ 
+  const userid = await GitHubApi.GitHubApi(accessToken)
+
+  if(!userid)
+  {
+    res.status(200).json({success:false,message:"로그인 후 이용해주세요."});
+    return;
+  }
+  
+  sql.InsertMemo(userid, (result, values) => {
+    if(result) 
+    {
+      console.log(userid + "의 메모 만들기 요청 성공")
+      res.status(200).json({success: true});
+    } else 
+    {
+      console.log(userid + "의 메모 만들기 요청 실패")
+      res.status(401).json({ success: false, message: "서버 에러" });
+    }
+  });
+
+});
 //----------------------------------------------------------------------ckeditor 이미지 업로드
-app.post('/memo/imgupload',async(req, res, next) => {
-  console.log("이미지 업로드 요청");
-  res.status(200).json({success:true, url:"https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzExMDJfMTMx%2FMDAxNjk4ODU2NDM0NTgy.SUBeLIeGKK3Ha5fhnglZZKk7RjdfXOw-3rCBf9L_tR8g.4HdjfwuqCA2fhLoefrlWiRiYR95rCKLCs2iCaAnRM6Ug.JPEG.yg1129sg%2FIMG_0220.jpg&type=a340"});
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '/home/jungsonghun/image_server');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now()+'si'+path.extname(file.originalname));
+  }
 });
 
+const upload = multer({ storage: storage });
+
+app.post('/memo/imgupload',upload.single('file'),async(req, res, next) => {
+  console.log("이미지 업로드 요청");
+  res.status(200).json({success:true, url:`http://jungsonghun.iptime.org:7749/images/${req.file.filename}`});
+});
+
+//----------------------------------------------------------------------메모리스트 불러오기
+app.get('/memo/getlist',async(req, res, next) => {
+  const accessToken = req.headers.authorization;
+  if(!accessToken)
+  {
+    res.status(200).json({success:false,message:"로그인 후 이용해주세요."});
+    return;
+  }
+
+  const userid = await GitHubApi.GitHubApi(accessToken)
+
+  if(!userid)
+  {
+    res.status(200).json({success:false,message:"로그인 후 이용해주세요."});
+    return;
+  }
+
+  sql.GetMemoList(userid, (result, values) => {
+    if(result) 
+    {
+      console.log(userid + "의 메모 리스트 get 요청 성공")
+      res.status(200).json({success: true, data:values});
+    } else 
+    {
+      console.log(userid + "의 메모 리스트 get 실패 ")
+      res.status(401).json({ success: false, message: "서버 에러, 메모가 존재하지 않습니다." });
+    }
+  });
+
+});
+
+//----------------------------------------------------------------------메모하나 불러오기
+app.get('/memo/getmemo/:id',async(req, res, next) => {
+  const { id } = req.params;
+  const accessToken = req.headers.authorization;
+  if(!accessToken)
+  {
+    res.status(200).json({success:false,message:"로그인 후 이용해주세요."});
+    return;
+  }
+ 
+  const userid = await GitHubApi.GitHubApi(accessToken)
+
+  if(!userid)
+  {
+    res.status(200).json({success:false,message:"로그인 후 이용해주세요."});
+    return;
+  }
+  
+  sql.GetMemo(userid, id, (result, values) => {
+    if(result) 
+    {
+      console.log(userid + "의 id : "+ id +" 메모 get 요청 성공")
+      res.status(200).json({success: true, data:values[0]});
+    } else 
+    {
+      console.log(userid + "의 id : "+ id +" 메모 get 요청 실패")
+      res.status(401).json({ success: false, message: "서버 에러" });
+    }
+  });
+
+});
+
+//----------------------------------------------------------------------메모수정
+app.put('/memo/putmemo',async(req, res, next) => {
+  const { id, content } = req.body;
+  const accessToken = req.headers.authorization;
+  if(!accessToken)
+  {
+    res.status(200).json({success:false,message:"로그인 후 이용해주세요."});
+    return;
+  }
+ 
+  const userid = await GitHubApi.GitHubApi(accessToken)
+
+  if(!userid)
+  {
+    res.status(200).json({success:false,message:"로그인 후 이용해주세요."});
+    return;
+  }
+  
+  sql.PutMemo(id, content ,userid, (result, values) => {
+    if(result) 
+    {
+      console.log(userid + "의 id : "+ id +" 메모 수정 요청 성공")
+      res.status(200).json({success: true});
+    } else 
+    {
+      console.log(userid + "의 id : "+ id +" 메모 수정 요청 실패")
+      res.status(401).json({ success: false, message: "서버 에러" });
+    }
+  });
+
+});
+
+//----------------------------------------------------------------------테스트
+app.get('/test',(req, res, next) => {
+  console.log("testing~~");
+  res.status(200).json({success:true});
+});
+
+//----------------------------------------------------------------------예외처리
 app.use((req, res, next) => {
   console.log(req.ip);
   res.status(404).send("404Not Found");
 });
+

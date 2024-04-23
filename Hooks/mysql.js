@@ -136,9 +136,103 @@ async function DeleteSchedule(userid, id, callback) {
     })
 }
 
-  module.exports = {
+async function GetMemoList(userid, callback) {
+    const getQuery = 'Select * FROM memo WHERE userid = ?;';
+    const values = [userid];
+
+    executeQuery(getQuery, values, (error, values) => {
+        if (error) {
+            console.error('쿼리 실행 오류: ' + error);
+            callback(false); // 실패 시 콜백으로 false 전달
+            return;
+        }
+        if (values.length === 0) {
+            console.error('검색 결과가 없습니다.');
+            callback(false); // 검색 결과가 없을 때도 실패로 간주하여 콜백으로 false 전달
+            return;
+        }
+
+        callback(true,values); // 성공 시 콜백으로 true 전달
+        return;
+    })
+}
+
+async function GetMemo(userid, id , callback) {
+    const getQuery = 'SELECT id, userid, content, date FROM memo WHERE userid = ? AND id = ?;';
+    const values = [userid, id];
+
+    executeQuery(getQuery, values, (error, values) => {
+        if (error) {
+            console.error('쿼리 실행 오류: ' + error);
+            callback(false); // 실패 시 콜백으로 false 전달
+            return;
+        }
+        if (values.length === 0) {
+            console.error('검색 결과가 없습니다.');
+            callback(false); // 검색 결과가 없을 때도 실패로 간주하여 콜백으로 false 전달
+            return;
+        }
+
+        callback(true,values); // 성공 시 콜백으로 true 전달
+        return;
+    })
+}
+
+async function InsertMemo(userid, callback) {
+    const insertQuery = 'INSERT INTO memo (userid, date) VALUE (?,?) ;';
+    const values = [userid, new Date()];
+
+    executeQuery(insertQuery, values, (error, values) => {
+        if(error){
+            console.error('쿼리 실행 오류: ' + error);
+            callback(false); // 실패 시 콜백으로 false 전달
+            return;
+        }
+
+        callback(true); // 성공 시 콜백으로 true 전달
+        return;
+    })
+}
+
+async function PutMemo( id, content, userid, callback) {
+    const putQuery = 'UPDATE memo SET content = ? WHERE userid = ? AND id = ?;';
+    const values = [content, userid, id];
+    executeQuery(putQuery, values, (error, values) => {
+        if(error){
+            console.error('쿼리 실행 오류: ' + error);
+            callback(false); // 실패 시 콜백으로 false 전달
+            return;
+        }
+
+        callback(true); // 성공 시 콜백으로 true 전달
+        return;
+    })
+}
+
+async function DeleteMemo( id, userid, callback) {
+    const deleteQuery = 'DELETE FROM memo WHERE id = ? AND userid = ?;';
+    const values = [userid, id];
+
+    executeQuery(deleteQuery, values, (error, values) => {
+        if(error){
+            console.error('쿼리 실행 오류: ' + error);
+            callback(false); // 실패 시 콜백으로 false 전달
+            return;
+        }
+
+        callback(true); // 성공 시 콜백으로 true 전달
+        return;
+    })
+}
+
+module.exports = {
     GetSchedule,
     InsertSchedule,
     UpdateSchedule,
     DeleteSchedule,
+    GetMemoList,
+    GetMemo,
+    InsertMemo,
+    PutMemo,
+    DeleteMemo,
   };
