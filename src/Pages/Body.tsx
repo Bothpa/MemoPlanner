@@ -3,6 +3,7 @@ import { DarkModeStore } from '../zustandStore/zustandDarkMode';
 import CalendarPage from './CalendarPage';
 import MemoPage from './MemoPage';
 import Account from './Account';
+import CKEditorComponent from '../Components/Memo/CkEditorComponent';
 
 const Body = () => {
   const isDarkMode = DarkModeStore(state => state.isDarkMode);
@@ -12,8 +13,10 @@ const Body = () => {
         <Routes>
         {/* 게시판 */}
         <Route path='/' element={<CalendarPage/>}/>
-        <Route path='/memo' element={<MemoPage/>}/>
         <Route path='/account' element={<Account/>}/>
+        {/* 메모 */}
+        <Route path='/memo' element={<MemoPage/>}/>
+        <Route path='/memoeditor' element={<CKEditorComponent/>}/>
         {/* 없는 url 예외처리 */}
         <Route path={"*"} element={<CalendarPage/>} />
       </Routes>

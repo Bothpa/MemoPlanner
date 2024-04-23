@@ -30,7 +30,6 @@ const ComHeader = () => {
       <div className='w-full p-3 flex flex-col justify-center items-center'>
           <HeaderLink label='Calendar' url='/' img='Calendar'/>
           <HeaderLink label='Memo' url='/memo' img='Memo'/>
-          {/* <HeaderLink label={`${isLogin?'Account':'LogIn'}`} url='/account' img='Account'/> */}
       </div>  
 
       {/* 설정박스 */}

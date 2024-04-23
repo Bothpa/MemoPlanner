@@ -22,7 +22,7 @@ const Account = () => {
         .then(async(res)=>{
             navigate('/');
             sessionStorage.setItem("accessToken",res.data.accessToken);
-            sessionStorage.setItem("account",`{"id":"${res.data.id}", "name":"${res.data.name}", profileImg:"${res.data.profileImg}"`)
+            sessionStorage.setItem("account",`{"id":"${res.data.id}", "name":"${res.data.name}", "profileImg":"${res.data.profileImg}"}`)
             setAccountLogin(res.data.id, res.data.name, res.data.profileImg);
             const data = await userScheduleApi(year,month);
             setUserSchedule(data);

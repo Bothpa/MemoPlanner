@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-, "../ckeditor5"  ]
+, "../ckeditor5", "build-ckeditor"  ]
 }

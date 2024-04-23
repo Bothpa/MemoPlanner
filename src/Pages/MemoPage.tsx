@@ -6,9 +6,8 @@ const MemoPage = () => {
   const isDarkMode = DarkModeStore(state => state.isDarkMode);
 
   return (
-    <div className={`w-full h-full flex flex-row ${isDarkMode ? 'dark' : 'light'}`}>
+    <div className={`w-full h-full flex flex-row  ${isDarkMode ? 'dark' : 'light'}`}>
         <MemoSelect/>
-        <CKEditorComponent/>
     </div>
   );
 }

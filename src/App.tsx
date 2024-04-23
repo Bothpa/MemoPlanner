@@ -28,7 +28,7 @@ const App = () => {
   const { change } = changeStateStore();
 
   useEffect(()=>{
-    if(sessionStorage.getItem('accessToken') != null && sessionStorage.getItem('account'))
+    if(sessionStorage.getItem('accessToken') != null && sessionStorage.getItem('account') != null)
       {
         const stringAccount = sessionStorage.getItem('account');
         const accessToken = sessionStorage.getItem('accessToken');
