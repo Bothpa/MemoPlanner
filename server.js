@@ -9,14 +9,15 @@ const cors = require('cors');
 require('dotenv').config(); // dotenv를 사용하여 .env 파일을 로드합니다.
 const axios = require('axios'); // 엑시오스
 const cookieParser = require('cookie-parser'); //쿠키파서
+const fs = require('fs');
 //----------------------------------------------------------------------나의 코드 모듈
 const sql = require('./Hooks/mysql.js'); // sql 모듈을 가져옴
 const GitHubApi = require('./Hooks/GitHubApi.js');
 const multer = require('multer');
 //----------------------------------------------------------------------모든 요청에대해 정지된아이피 감지
 app.use(cors({
-  // origin: 'http://jungsonghun.iptime.org:3000',  // 클라이언트의 URL
-  // credentials: true  // 쿠키를 허용하도록 설정
+  origin: ['http://jungsonghun.iptime.org:3000','http://jungsonghun.iptime.org:8864'],  // 클라이언트의 URL
+  credentials: true  // 쿠키를 허용하도록 설정
 }));
 app.use(express.urlencoded({ extended: false }));
 // app.use(express.static(path.join(__dirname, '../memoplanner/build')));
@@ -42,32 +43,32 @@ app.listen(port, function () {
 // }));
 //----------------------------------------------------------------------스캐줄 넘기기
 app.get('/userSchedule/:year/:month',async(req, res, next) => {
-  const { year, month } = req.params;
-  const accessToken = req.headers.authorization;
-  const userid = await GitHubApi.GitHubApi(accessToken)
-  if(!userid)
-    {
-      res.status(200).json({success:false,message:"로그인 후 이용해주세요."});
-      return;
-    }
-  console.log("id : "+userid+"가 "+year+"년"+month+"월 일정을 요청"+ "ip : " + req.ip);
-  sql.GetSchedule(year, month, userid, (result, values) => {
-    if(result) 
-    {
-      if(values){
-        // 검색 성공 결과 나옴
-        // console.table(values)
-        res.status(200).json({success: true, data:values});
-      }else{
-        // 검색결과 없음
-        res.status(200).json({success:false, data:null,message: "검색 결과 없음"});
-      }
-    } else 
-    {
-      //데이터 베이스 접속 실패
-      res.status(401).json({ success: false, message: "조회 실패" });
-    }
-  });
+  // const { year, month } = req.params;
+  // const accessToken = req.headers.authorization;
+  // const userid = await GitHubApi.GitHubApi(accessToken)
+  // if(!userid)
+  //   {
+  //     res.status(200).json({success:false,message:"로그인 후 이용해주세요."});
+  //     return;
+  //   }
+  // console.log("id : "+userid+"가 "+year+"년"+month+"월 일정을 요청"+ "ip : " + req.ip);
+  // sql.GetSchedule(year, month, userid, (result, values) => {
+  //   if(result) 
+  //   {
+  //     if(values){
+  //       // 검색 성공 결과 나옴
+  //       // console.table(values)
+  //       res.status(200).json({success: true, data:values});
+  //     }else{
+  //       // 검색결과 없음
+  //       res.status(200).json({success:false, data:null,message: "검색 결과 없음"});
+  //     }
+  //   } else 
+  //   {
+  //     //데이터 베이스 접속 실패
+  //     res.status(401).json({ success: false, message: "조회 실패" });
+  //   }
+  // });
 });
 //----------------------------------------------------------------------스캐줄 삽입
 app.post('/userSchedule/insert',async(req, res, next) => {
@@ -136,15 +137,15 @@ app.delete('/userSchedule/delete/:id',async(req, res, next) => {
     });
   });
 //----------------------------------------------------------------------깃허브 로그인
-app.post("/account/github/login",async(req, res, next) => {
+app.get("/account/github/login/:code",async(req, res, next) => {
   console.log("깃허브 로그인?")
-  const data = req.body;
+  const {code} = req.params;
   try{
       const restoken = await axios.post("https://github.com/login/oauth/access_token",
       {
         client_id: process.env.GITHUB_CLIENT_ID,
         client_secret: process.env.GITHUB_CLIENT_SECRET,
-        code: data.code,
+        code: code,
       },
       {
         headers: {
@@ -164,8 +165,14 @@ app.post("/account/github/login",async(req, res, next) => {
         });
         console.table(data2.data);
         console.log("로그인 성공 id : "+data2.data.login);
-        res.status(200).cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, sameSite: 'lax',maxAge:100000 })
-        .json({ accessToken : access_token, id : data2.data.login, name : data2.data.name, profileImg : data2.data.avatar_url });
+        const options = {
+          httpOnly: false,
+          // sameSite: 'none',
+          secure: false,
+          maxAge: 60 * 24 * 60 * 60 * 1000,
+        };
+        res.status(200).cookie('refreshToken', refreshToken, options)
+        .json({ success:true, accessToken : access_token, id : data2.data.login, name : data2.data.name, profileImg : data2.data.avatar_url });
         return;
       }catch(err){
         console.log("엑세스토큰 인증요청 에러")
@@ -183,53 +190,62 @@ app.post("/account/github/login",async(req, res, next) => {
   res.status(500).json({success:false});
 });
 //----------------------------------------------------------------------깃허브 리프레시토큰 자동 로그인
-// app.post("/account/github/autologin",async(req, res, next) => {
-//   console.log("자동로그인 시도")
-//   const { refreshToken } = req.cookies;
-//   console.log(refreshToken);
-//   try{
-//       const restoken = await axios.post("https://github.com/login/oauth/access_token",
-//       {
-//         client_id: process.env.GITHUB_CLIENT_ID,
-//         client_secret: process.env.GITHUB_CLIENT_SECRET,
-//         grant_type: "refresh_token",
-//         refresh_token: refreshToken,
-//       },
-//       {
-//         headers: {
-//           accept: "application/json",
-//         },
-//       }
-//       )
-//       if(restoken.status === 200)
-//       {
-//         try{
-//           const access_token = restoken.data.access_token;
-//           const refresh_token = restoken.data.refresh_token;
-//           const data2 = await axios.get(`https://api.github.com/user`, {
-//             headers: { Authorization: `token ${access_token}` },
-//           });
-//           console.log("깃허브 자동 로그인 성공")
-//           res.status(200).cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, sameSite: 'strict' })
-//           .json({ accessToken : access_token, id : data2.data.login, name : data2.data.name });
-//           return;
-//         }catch(err){
-//           console.log(err)
-//           console.log("엑세스토큰 인증요청 에러")
-//           res.status(500).json({success:false});
-//           return;
-//         }
-//       }
-//   }catch(err){
-//     console.log(err)
-//     res.status(500).json({success:false});
-//   }
-//   console.log("깃허브 자동 로그인 실패")
-//   res.status(500).json({success:false});
-// });
+app.get("/account/github/autologin",async(req, res, next) => {
+  console.log("자동로그인 시도")
+  const { refreshToken } = req.cookies;
+  if(!refreshToken)
+  {
+    res.status(400).json({success:false});
+    return;
+  }
+  try{
+      const restoken = await axios.post("https://github.com/login/oauth/access_token",
+      {
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
+      },
+      {
+        headers: {
+          accept: "application/json",
+        },
+      }
+      )
+      if(restoken.status === 200)
+      {
+        try{
+          const access_token = restoken.data.access_token;
+          const refresh_token = restoken.data.refresh_token;
+          const data2 = await axios.get(`https://api.github.com/user`, {
+            headers: { Authorization: `token ${access_token}` },
+          });
+          console.log("깃허브 자동 로그인 성공")
+          const options = {
+            httpOnly: false,
+            // sameSite: 'none',
+            secure: false,
+            maxAge: 60 * 24 * 60 * 60 * 1000,
+          };
+          res.status(200).cookie('refreshToken', refresh_token, options)
+          .json({ success:true, accessToken : access_token, id : data2.data.login, name : data2.data.name, profileImg : data2.data.avatar_url });
+          return;
+        }catch(err){
+          console.log(err)
+          console.log("엑세스토큰 인증요청 에러")
+          res.status(500).json({success:false});
+          return;
+        }
+      }
+  }catch(err){
+    console.log(err)
+    res.status(500).json({success:false});
+  }
+  console.log("깃허브 자동 로그인 실패")
+  res.status(500).json({success:false});
+});
 //----------------------------------------------------------------------메모 만들기
 app.post('/memo/insertmemo',async(req, res, next) => {
-  console.log("요청옴")
   const accessToken = req.headers.authorization;
   if(!accessToken)
   {
@@ -370,10 +386,163 @@ app.put('/memo/putmemo',async(req, res, next) => {
 
 });
 
+//----------------------------------------------------------------------메모삭제
+app.delete('/memo/deletememo/:id',async(req, res, next) => {
+  console.log("메모삭제요청")
+  const { id } = req.params;
+  const accessToken = req.headers.authorization;
+  if(!accessToken)
+  {
+    res.status(200).json({success:false,message:"로그인 후 이용해주세요."});
+    return;
+  }
+ 
+  const userid = await GitHubApi.GitHubApi(accessToken)
+
+  if(!userid)
+  {
+    res.status(200).json({success:false,message:"로그인 후 이용해주세요."});
+    return;
+  }
+  
+  sql.DeleteMemo(id, userid, (result, values) => {
+    if(result) 
+    {
+      console.log(userid + "의 id : "+ id +" 메모 삭제 요청 성공")
+      res.status(200).json({success: true});
+    } else 
+    {
+      console.log(userid + "의 id : "+ id +" 메모 삭제 요청 실패")
+      res.status(401).json({ success: false, message: "서버 에러" });
+    }
+  });
+
+});
+
+//----------------------------------------------------------------------drive 파일트리 반환
+const getDirectoryContents = require('./Hooks/GetFileTree.js');
+app.get('/drive/filetree', async (req, res, next) => {
+  console.log("파일트리 요청")
+  const accessToken = req.headers.authorization;
+  if (!accessToken) {
+    res.status(401).json({ success: false, message: "로그인 후 이용해주세요." });
+    return;
+  }
+
+  const userid = await GitHubApi.GitHubApi(accessToken);
+  if (!userid) {
+    res.status(401).json({ success: false, message: "로그인 후 이용해주세요." });
+    return;
+  }
+
+  const userFolder = process.env.DRIVE_PATH+userid;
+  if (!fs.existsSync(userFolder)) {
+    fs.mkdirSync(userFolder);
+  }
+
+  const directoryContents = getDirectoryContents(userFolder,userid);
+  res.status(200).json({ success: true, fileTree: directoryContents });
+});
+
+//----------------------------------------------------------------------drive 파일 업로드
+const fileStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, process.env.DRIVE_PATH);
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+const fileUpload = multer({
+  storage: fileStorage,
+  limits: {
+    // fileSize: 100 * 1024 * 1024 // 100MB
+    // fileSize: 50 * 1024 * 1024 // 50MB
+    fileSize: 10 * 1024 * 1024 // 10MB
+    // fileSize: 1024 * 1024 // 1MB
+  }
+});
+
+app.post('/drive/upload', fileUpload.single('file'), async (req, res, next) => {
+  console.log("파일 업로드 요청")
+  const accessToken = req.headers.authorization;
+  if (!accessToken) {
+    res.status(401).json({ success: false, message: "로그인 후 이용해주세요." });
+    return;
+  }
+
+  const userid = await GitHubApi.GitHubApi(accessToken);
+  if (!userid) {
+    res.status(401).json({ success: false, message: "로그인 후 이용해주세요." });
+    return;
+  }
+
+  const file = req.file;
+  const userFolder = process.env.DRIVE_PATH+userid;
+  const filePath = `${userFolder}/${file.filename}`;
+
+  // Create user folder if it doesn't exist
+  if (!fs.existsSync(userFolder)) {
+    fs.mkdirSync(userFolder);
+  }
+
+  // Move the uploaded file to the user folder
+  fs.renameSync(file.path, filePath);
+
+  res.status(200).json({ success: true, message: '파일 업로드 성공' });
+}, (error, req, res, next) => {
+  // console.log(error);
+  return res.status(400).json({ success: false, message: "10MB 이상의 파일을 업로드 할 수 없습니다." });
+});
+
+//----------------------------------------------------------------------drive 폴더 or 파일 이름 변경
+app.put('/drive/rename', async (req, res, next) => {
+  console.log("폴더 이름 변경 요청")
+  const { oldName, newName } = req.body;
+  const accessToken = req.headers.authorization;
+  if (!accessToken) {
+    res.status(401).json({ success: false, message: "로그인 후 이용해주세요." });
+    return;
+  }
+
+  const userid = await GitHubApi.GitHubApi(accessToken);
+  if (!userid) {
+    res.status(401).json({ success: false, message: "로그인 후 이용해주세요." });
+    return;
+  }
+
+  const userFolder = process.env.DRIVE_PATH+userid;
+  const oldPath = `${userFolder}/${oldName}`;
+  const newPath = `${userFolder}/${newName}`;
+  console.log(oldPath);
+  console.log(newPath);
+
+  if (!fs.existsSync(oldPath)) {
+    res.status(400).json({ success: false, message: "폴더가 존재하지 않습니다." });
+    return;
+  }
+
+  fs.renameSync(oldPath, newPath);
+
+  res.status(200).json({ success: true, message: '폴더 이름 변경 성공' });
+});
+
 //----------------------------------------------------------------------테스트
 app.get('/test',(req, res, next) => {
   console.log("testing~~");
-  res.status(200).json({success:true});
+  // const accessToken = req.headers.authorization? req.headers.authorization : null;
+  // console.log(accessToken)
+
+  console.log(req.cookies.refreshToken)
+  const options = {
+    httpOnly: false,
+    // sameSite: 'none',
+    secure: false,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  };
+  // res.status(200).json({success:true});
+  res.status(200).cookie('refreshToken', "Devlogtesting", options).json({success:true})
 });
 
 //----------------------------------------------------------------------예외처리

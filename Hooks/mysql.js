@@ -211,7 +211,7 @@ async function PutMemo( id, content, userid, callback) {
 
 async function DeleteMemo( id, userid, callback) {
     const deleteQuery = 'DELETE FROM memo WHERE id = ? AND userid = ?;';
-    const values = [userid, id];
+    const values = [id, userid];
 
     executeQuery(deleteQuery, values, (error, values) => {
         if(error){
