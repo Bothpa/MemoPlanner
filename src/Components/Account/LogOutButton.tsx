@@ -1,12 +1,13 @@
 import { accountStore } from "../../zustandStore/zustandAccount";
 import { useNavigate } from 'react-router-dom';
+import { removeCookie } from "../..";
 
 const LogOutButton = () => {
     const navigate = useNavigate();
     const { setAccountLogout } = accountStore();
     const LogOutEvent = () => {
         sessionStorage.clear();
-        // localStorage.clear();
+        removeCookie();
         setAccountLogout();
         navigate('/')
         window.location.reload();

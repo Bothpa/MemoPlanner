@@ -16,7 +16,7 @@ const HeaderLink: React.FC<HeaderLinkProps> = ({label,url,img}) => {
 
     return(
         <motion.div whileHover={{ scale: 1.1 }} onClick={()=>navigate(`${url}`)} className={`w-full h-fit p-2 mb-2 flex flex-row items-center text-xl cursor-pointer rounded-xl ${location.pathname == url && ` ${isDarkMode ? 'bg-[#0D1922] text-[#30A9FF]' : 'bg-sky-100 text-sky-500'}`}`}>
-            <img src={`/Icon/${img}${isDarkMode?'Light':''}.png`} alt="image" className="w-6 h-6 mr-2"/>{label}
+            <img src={`/Icon/${img}${isDarkMode?'White':''}.png`} alt="image" className="w-6 h-6 mr-2"/>{label}
         </motion.div>
     )
 }

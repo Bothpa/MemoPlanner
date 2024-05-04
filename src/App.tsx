@@ -17,6 +17,9 @@ import SchedulePopup from './Components/Popup/SchedulePopup';
 import { accountStore } from './zustandStore/zustandAccount';
 import { changeStateStore } from './zustandStore/zustandChangeState';
 import LoginStatus from './Components/Account/LoginStatus';
+import { fileTreeStore } from './zustandStore/zustandFileTreeStore';
+import GetFileTreeApi from './Hooks/GetFileTree';
+import axios from 'axios';
 
 const App = () => {
   const isDarkMode = DarkModeStore(state => state.isDarkMode);
@@ -35,6 +38,7 @@ const App = () => {
         if(stringAccount != null && accessToken != null){
           try{
             const account = JSON.parse(stringAccount);
+            console.log("여기야2??");
             setAccountLogin(account.id, account.name, account.profileImg);
           }catch(err){
             sessionStorage.clear();
@@ -48,24 +52,23 @@ const App = () => {
 
 
   // 자동로그인
-  // useEffect(()=>{
-  //   const GithubAutoLoginEventRes = async() => {
-  //     const res = await GithubAutoLoginEvent()
-  //     if(res != false && res.id != null && res.name != null)
-  //       {
-  //         setAccountLogin(res.id, res.name);
-  //         const data = await userScheduleApi(year,month);
-  //         setUserSchedule(data);
-  //       }
-  //   }
-  //   const refreshToken = localStorage.getItem('refreshToken')
-  //   const accessToken = sessionStorage.getItem('accessToken')
-  //   console.log(refreshToken+"\n"+accessToken)
-  //   if(refreshToken != null && accessToken == null)
-  //     {
-  //       GithubAutoLoginEventRes();
-  //     }
-  // },[])
+  useEffect(()=>{
+    const GithubAutoLoginEventRes = async() => {
+      const res = await GithubAutoLoginEvent()
+      if(res != false && res.id != null && res.name != null)
+        {
+          console.log("여기야3??");
+          setAccountLogin(res.id, res.name, res.profileImg);
+          const data = await userScheduleApi(year,month);
+          setUserSchedule(data);
+        }
+    }
+    const accessToken = sessionStorage.getItem('accessToken')
+    if(accessToken == null)
+      {
+        GithubAutoLoginEventRes();
+      }
+  },[])
 
   // 달력정보 store에 저장
   useEffect(()=>{
@@ -96,11 +99,9 @@ const App = () => {
     HolidayFunc();
   },[year,month,change])
 
-
   return (
     <div className={`App ${isDarkMode ? 'dark' : 'light'}`}>
       <BrowserRouter>
-      
       {/* 컴퓨터 */}
         <div className='Com-Header'><ComHeader/></div>
       {/* 바디 */}

@@ -27,7 +27,9 @@
 * Zustand
     * 리액트 상태관리 라이브러리  
 * Axios
-    * AJAX요청 라이브러리  
+    * AJAX요청 라이브러리
+* Ekditor
+    * html편집툴
 
 ## 설치 방법
 

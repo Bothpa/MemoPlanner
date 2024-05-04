@@ -30,7 +30,7 @@ const MemoSelectListItem:React.FC<MemoSelectListItemProps> = ({MemoId, MemoConte
 
 return (
     <motion.div whileHover={{ scale: 1.05 }} onClick={MemoSelectEvent} className={`w-[100%] h-fit flex flex-col p-3 mb-3 border rounded-md cursor-pointer ${isDarkMode ? 'dark border-zinc-700 hover:bg-[#0D1922]' : 'light border-zinc-300 hover:bg-sky-100'}`}>
-        <div className="font-bold overflow-hidden overflow-ellipsis whitespace-nowrap">{MemoContent}</div>
+        <div className="font-bold overflow-hidden overflow-ellipsis whitespace-nowrap">{MemoContent==='' || MemoContent === null ?'내용을 입력하세요.':MemoContent}</div>
         <div className="mt-2 text-sm">{MemoDate.toDateString()}</div>
     </motion.div>
 );

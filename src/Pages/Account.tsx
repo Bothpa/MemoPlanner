@@ -18,16 +18,16 @@ const Account = () => {
   // 깃허브 로그인용
   useEffect(()=>{
     const GithubLoginEvent = async() => {
-        await axios.post("http://jungsonghun.iptime.org:7223/account/github/login",{code})
-        .then(async(res)=>{
-            navigate('/');
-            sessionStorage.setItem("accessToken",res.data.accessToken);
-            sessionStorage.setItem("account",`{"id":"${res.data.id}", "name":"${res.data.name}", "profileImg":"${res.data.profileImg}"}`)
-            setAccountLogin(res.data.id, res.data.name, res.data.profileImg);
-            const data = await userScheduleApi(year,month);
-            setUserSchedule(data);
-        })
-        .catch((err)=>{alert("GitHub Login Error")})
+      await axios.get(`http://jungsonghun.iptime.org:7223/account/github/login/${code}`,{ withCredentials: true })
+      .then(async(res)=>{
+        navigate('/');
+        sessionStorage.setItem("accessToken",res.data.accessToken);
+        sessionStorage.setItem("account",`{"id":"${res.data.id}", "name":"${res.data.name}", "profileImg":"${res.data.profileImg}"}`)
+        setAccountLogin(res.data.id, res.data.name, res.data.profileImg);
+        const data = await userScheduleApi(year,month);
+        setUserSchedule(data);
+      })
+      .catch((err)=>{alert("GitHub Login Error")})
     }
     if(code != null){
       GithubLoginEvent();

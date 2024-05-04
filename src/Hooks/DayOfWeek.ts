@@ -8,3 +8,5 @@ export const getDayOfWeek = (year:number|null, month:number|null, day:number|nul
         return "error";
       }
   }
+
+// 년 월 일 을 입력받으면 요일을 반환하는 함수

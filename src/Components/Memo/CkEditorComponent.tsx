@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { GetMemoApi } from '../../Hooks/GetMemoApi';
 import { PutMemoApi } from '../../Hooks/PutMemoApi';
 import { useNavigate } from 'react-router-dom';
+import { DeleteMemoApi } from '../../Hooks/DeleteMemoApi';
 import ImageButton from '../Button/ImageButton';
 
 const CKEditorComponent = () => {
@@ -20,7 +21,7 @@ const CKEditorComponent = () => {
             const Memo = await GetMemoApi(id);
             if(Memo)
             {
-                setText(Memo.content);
+                setText(Memo.content?Memo.content:'');
             }else
             {
                 alert("error")
@@ -91,10 +92,30 @@ const CKEditorComponent = () => {
         }
     }
 
+    const deleteEvent = async() => {
+        if(memoId)
+        {
+            if(window.confirm("정말 삭제하시겠습니까?"))
+            {
+                const result = await DeleteMemoApi(memoId);
+                if(result)
+                {
+                    navigate(-1);
+                }else
+                {
+                    alert("error");
+                }
+            }
+        }
+    }
+
     return(
         <div className='flex flex-col h-full w-full'>
             <div className='flex flex-row items-center pl-3 h-[5%] w-full'>
                 <ImageButton img="ArrowLeft" func={()=>navigate(-1)}/>
+                <div className='ml-auto mr-[60px]'><ImageButton img="Delete" func={deleteEvent}/></div>
+                {/* <div className='ml-auto mr-[60px]'><ImageButton img="Delete" func={()=>console.log("??")}/></div> */}
+
             </div>
             <div className='h-[95%] w-full'>
                 <CKEditor

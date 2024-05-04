@@ -4,13 +4,21 @@ import './style.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+import {CookiesProvider} from 'react-cookie';
+import {Cookies} from 'react-cookie';
+const cookies = new Cookies();
+export const removeCookie = () => {
+  cookies.remove('refreshToken');
+}
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   // <React.StrictMode>
+  <CookiesProvider>
     <App />
+  </CookiesProvider>
   // </React.StrictMode>
 );
 
