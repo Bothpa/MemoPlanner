@@ -5,6 +5,7 @@ interface fileTree {
     name : string;
     path : string;
     isDirectory : boolean;
+    parentPath : string;
     children : fileTree[]|null;
 }
 
