@@ -10,6 +10,7 @@ function getDirectoryContents(dirPath,userid) {
     return {
       name: item,
       path: modifiedPath,
+      parentPath: path.dirname(modifiedPath),
       isDirectory: isDirectory,
       children: isDirectory ? getDirectoryContents(itemPath,userid) : null
     };
