@@ -3,6 +3,7 @@ import { accountStore } from "../../zustandStore/zustandAccount";
 import GitHubLogin from "../Account/GitHubLogin";
 import { motion } from "framer-motion";
 import { DarkModeStore } from "../../zustandStore/zustandDarkMode";
+import ChangeThema from "../Button/ChangeThema";
 
 interface AccountPopupProps {
     isAccountPopup: boolean;
@@ -16,6 +17,9 @@ const AccountPopup: React.FC<AccountPopupProps> = ({isAccountPopup}) => {
             {isLogin ? <img src={profileImg} className='w-[100px] h-[100px] rounded-full mb-2' alt="profileImg"/> : <img src='/Icon/Profile.png' className='w-[100px] h-[100px] rounded-full mb-2' alt="profileImg"/>}
             {isLogin ? (<div className={`mb-3 flex flex-row`}><p className="font-bold">{id}</p>({name})</div>):(<div className={`mb-3 flex flex-row`}><p className="font-bold">로그인</p>하세요.</div>)}
             {isLogin ? <LogOutButton/> : <GitHubLogin/>}
+            <div className={`mt-3 w-full flex justify-center p-2 ${isDarkMode ? 'border-t-[1px] border-zinc-800' : 'border-t-2'}`}>
+                <ChangeThema/>
+            </div>
         </motion.div>
     )
 }

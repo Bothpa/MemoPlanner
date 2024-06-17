@@ -100,17 +100,17 @@ const App = () => {
     <div className={`App ${isDarkMode ? "dark" : "light"}`}>
       <BrowserRouter>
         {/* 컴퓨터 */}
-        <div className="Com-Header">
+        {/* <div className="Com-Header">
           <ComHeader />
-        </div>
+        </div> */}
         {/* 바디 */}
         <div className="Body">
           <Body />
         </div>
         {/* 핸드폰 */}
-        <div className="Phone-Header">
+        {/* <div className="Phone-Header">
           <PhoneHeader />
-        </div>
+        </div> */}
         {/* 팝업 */}
         <PopupPage />
         <SchedulePopup />

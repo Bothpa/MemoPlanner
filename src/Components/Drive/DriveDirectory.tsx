@@ -104,7 +104,7 @@ const DriveDirectory: React.FC<DriveDirectory> = ({
       <div>{Extension()}</div>
       <button
         onClick={fileDeleteEvent}
-        className="ml-auto mr-10 border p-1 rounded-xl hover:bg-red-500 hover:text-white"
+        className="ml-auto mr-[2%] border p-1 rounded-xl hover:bg-red-500 hover:text-white"
       >
         삭제
       </button>

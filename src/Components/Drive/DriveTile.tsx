@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import fileTreeStore from "../../zustandStore/zustandFileTreeStore";
 import DriveDirectory from "./DriveDirectory";
 import { DarkModeStore } from "../../zustandStore/zustandDarkMode";
 import DriveBar from "./DriveBar";
+import PostDriveFile from "../../Hooks/PostDriveFile";
+import GetFileTreeApi from "../../Hooks/GetFileTree";
 
 interface fileTree {
   name: string;
@@ -18,6 +20,7 @@ const DriveTile = () => {
   const [nowPath, setNowPath] = useState<fileTree[] | null>(null);
   const [nowPathUrl, setNowPathUrl] = useState<string>("/");
   const [pathArray, setPathArray] = useState<fileTree[][]>([]);
+  const dragRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setNowPath(fileTree);
@@ -40,12 +43,91 @@ const DriveTile = () => {
     });
   };
 
+  //---------------------------------------------------------------
+  const onChangeFiles = useCallback(
+    (e: ChangeEvent<HTMLInputElement> | any): void => {
+      if (
+        e.dataTransfer.files.length > 1 ||
+        e.dataTransfer.files.length === 0
+      ) {
+        alert("파일은 하나씩만 업로드 가능합니다.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", e.dataTransfer.files[0]);
+      formData.append("path", nowPathUrl);
+      PostDriveFile(formData)
+        .then(async (res) => {
+          setNowPathUrl("/");
+          const data = await GetFileTreeApi();
+          fileTreeStore.setState({ fileTree: data });
+          formData.delete("file");
+          e.target.file.value = "";
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    [nowPathUrl]
+  );
+
+  const handleDragIn = useCallback((e: DragEvent): void => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleDragOut = useCallback((e: DragEvent): void => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleDragOver = useCallback((e: DragEvent): void => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleDrop = useCallback(
+    (e: DragEvent): void => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      onChangeFiles(e);
+    },
+    [onChangeFiles]
+  );
+
+  const initDragEvents = useCallback((): void => {
+    if (dragRef.current !== null) {
+      dragRef.current.addEventListener("dragenter", handleDragIn);
+      dragRef.current.addEventListener("dragleave", handleDragOut);
+      dragRef.current.addEventListener("dragover", handleDragOver);
+      dragRef.current.addEventListener("drop", handleDrop);
+    }
+  }, [handleDragIn, handleDragOut, handleDragOver, handleDrop]);
+
+  const resetDragEvents = useCallback((): void => {
+    if (dragRef.current !== null) {
+      dragRef.current.removeEventListener("dragenter", handleDragIn);
+      dragRef.current.removeEventListener("dragleave", handleDragOut);
+      dragRef.current.removeEventListener("dragover", handleDragOver);
+      dragRef.current.removeEventListener("drop", handleDrop);
+    }
+  }, [handleDragIn, handleDragOut, handleDragOver, handleDrop]);
+
+  useEffect(() => {
+    initDragEvents();
+
+    return () => resetDragEvents();
+  }, [initDragEvents, resetDragEvents]);
+  // -------------------------------------------------
+
   return (
-    <div className="w-full h-full flex flex-col p-3 pb-2 pt-0 overflow-y-auto">
-      <DriveBar nowPathUrl={nowPathUrl} />
-      <div className="w-full p-2">
-        <button onClick={goBack}>뒤로가기</button>
-      </div>
+    <div
+      className={`w-full h-full flex flex-col p-3 pb-2 pt-0 overflow-y-auto`}
+      ref={dragRef}
+    >
+      <DriveBar nowPathUrl={nowPathUrl} goBack={goBack} />
       {nowPath?.length ? (
         nowPath.map((item: fileTree, index) => (
           <DriveDirectory
@@ -78,6 +160,13 @@ const DriveTile = () => {
       >
         Now : {nowPathUrl}
       </div>
+      <input
+        type="file"
+        id="fileUpload"
+        style={{ display: "none" }}
+        multiple={false}
+        onChange={onChangeFiles}
+      />
     </div>
   );
 };

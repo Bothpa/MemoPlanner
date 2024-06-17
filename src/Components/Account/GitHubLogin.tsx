@@ -3,6 +3,7 @@ import { DarkModeStore } from "../../zustandStore/zustandDarkMode";
 const GitHubLogin = () => {
   const { isDarkMode } = DarkModeStore();
   const githubLogin = async() => {
+    // window.open(`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}`, '_blank');
     window.location.href=`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}`;
   }
 

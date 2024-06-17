@@ -94,9 +94,13 @@ input:focus {
     .Phone-Header{
         display : none;
     }
-    .Body{
+    /* .Body{
         height:100vh;
         width:85vw;
+    } */
+    .Body{
+        height:100vh;
+        width:100vw;
     }
     .App{
         display:flex;
@@ -113,8 +117,12 @@ input:focus {
         height:8vh;
         width:100vw;
     }
-    .Body{
+    /* .Body{
         height:92vh;
+        width:100vw;
+    } */
+    .Body{
+        height:100vh;
         width:100vw;
     }
     .App{
@@ -211,6 +219,7 @@ code {
     background-color : inherit !important;
     color : inherit !important;
 }
+
 
 
 /* ----------CkEditor css---------- */

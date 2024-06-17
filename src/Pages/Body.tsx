@@ -15,10 +15,10 @@ const Body = () => {
         {/* 달력 */}
         <Route path='/' element={<CalendarPage/>}/>
         {/* 메모 */}
-        <Route path='/memo' element={<MemoPage/>}/>
-        <Route path='/memoeditor' element={<CKEditorComponent/>}/>
+        {/* <Route path='/memo' element={<MemoPage/>}/>
+        <Route path='/memoeditor' element={<CKEditorComponent/>}/> */}
         {/* 클라우드 */}
-        <Route path='/drive' element={<DrivePage/>}/>
+        {/* <Route path='/drive' element={<DrivePage/>}/> */}
 
         {/* 로그인 */}
         <Route path='/account' element={<Account/>}/>
