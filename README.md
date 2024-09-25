@@ -10,9 +10,11 @@
 * front-end
     * react.js + typescript  
 * back-end
-    * express.js + javascript  
+    * express.js
 * database
-    * mysql  
+    * mysql
+* server
+    * unbuntu - nginx, pm2
 
 ## 외부 라이브러리 & API
 
