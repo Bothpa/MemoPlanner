@@ -32,7 +32,7 @@
 
 * Ekditor
 
-## 설치 방법
+## 버전
 
 node : 21.1.0 ver  
 npm : 10.2.0 ver  
