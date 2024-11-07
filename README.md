@@ -1,7 +1,7 @@
 # 프로젝트 이름
 
 * 프로젝트명
-    캘린더 
+    메모플래너
 
 * 일정 정리 캘린더
 
@@ -10,9 +10,11 @@
 * front-end
     * react.js + typescript  
 * back-end
-    * express.js + javascript  
+    * express.js
 * database
-    * mysql  
+    * mysql
+* server
+    * unbuntu - nginx, pm2
 
 ## 외부 라이브러리 & API
 
@@ -30,7 +32,7 @@
 
 * Ekditor
 
-## 설치 방법
+## 버전
 
 node : 21.1.0 ver  
 npm : 10.2.0 ver  
@@ -44,10 +46,6 @@ react-router-dom : 6.22.3 ver
 3. 깃허브로 로그인하여 사용하실 수 있습니다.
 
 ## 주의사항
-캘린더 외 다른 코드들은 캘린더 외에도 여러 기능을 만들어놓은 코드이다. 
-
-CKEditor를 사용하여 메모장을 구현하였으며,
-
-FTP클라우드 서버를 구축해 놓은 것이며.
-
+캘린더 외 다른 코드들은 캘린더 외에도 공부를위해 작성된 코드가 있다.
+(CKEditor를 사용하여 메모장, FTP를이용하여 클라우드 드라이브)
 오픈된 서버에서는 작동하지 않도록 주석처리를 해 두었습니다.
