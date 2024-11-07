@@ -16,8 +16,7 @@ const GitHubApi = require("./Hooks/GitHubApi.js");
 app.use(
   cors({
     origin: [
-      "http://jungsonghun.iptime.org:3000",
-      "http://jungsonghun.iptime.org:8864",
+      process.env.COOKIE_URL
     ], // 클라이언트의 URL
     credentials: true, // 쿠키를 허용하도록 설정
   })
@@ -28,7 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser("bothpa"));
 //----------------------------------------------------------------------서버 오픈
-const port = 7223;
+const port = process.env.PORT;
 app.listen(port, function () {
   console.log(port + "포트로 서버 오픈");
 });
